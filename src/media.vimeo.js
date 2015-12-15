@@ -86,6 +86,11 @@
   };
 
   videojs.Vimeo.prototype.src = function(src){
+    // TODO: This hides bugs
+    if (!src) {
+      return;
+    }
+
     this.isReady_ = false;
 
     var regExp;
@@ -130,6 +135,7 @@
   };
 
   videojs.Vimeo.prototype.load = function(){};
+  videojs.Vimeo.prototype.ended = function(){ this.vimeo.api('play'); };
   videojs.Vimeo.prototype.play = function(){ this.vimeo.api('play'); };
   videojs.Vimeo.prototype.pause = function(){ this.vimeo.api('pause'); };
   videojs.Vimeo.prototype.paused = function(){
