@@ -86,14 +86,30 @@
   };
 
   videojs.Vimeo.prototype.src = function(src){
+    // TODO: This hides bugs
+    if (!src) {
+      return;
+    }
+
     this.isReady_ = false;
 
-    // Regex that parse the video ID for any Vimeo URL
-    var regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-    var match = src.match(regExp);
+    var regExp;
+    var match;
 
-    if (match){
-      this.videoId = match[5];
+    if (/player\.vimeo.com/.test(src)) {
+      regExp = /video\/([A-z0-9]+)/;
+      match = src.match(regExp);
+      if (match) {
+        this.videoId = match[1];
+      }
+    } else {
+      // Regex that parse the video ID for any Vimeo URL
+      regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      match = src.match(regExp);
+
+      if (match){
+        this.videoId = match[5];
+      }
     }
 
     var params = {
@@ -119,6 +135,7 @@
   };
 
   videojs.Vimeo.prototype.load = function(){};
+  videojs.Vimeo.prototype.ended = function(){ this.vimeo.api('play'); };
   videojs.Vimeo.prototype.play = function(){ this.vimeo.api('play'); };
   videojs.Vimeo.prototype.pause = function(){ this.vimeo.api('pause'); };
   videojs.Vimeo.prototype.paused = function(){
